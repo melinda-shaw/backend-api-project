@@ -11,6 +11,24 @@ const accts = [{
     amount: 735.01,
     pending: true
   }]
+}, {
+  id: 102,
+  name: `Brenda`,
+  bankName: `The Bank`,
+  description: `checking`,
+  trans: [{
+      transId: 25,
+      title: `Anthro`,
+      amount: 130.59,
+      pending: false
+    },
+    {
+      transId: 32,
+      title: `xxx`,
+      amount: 12.00,
+      pending: false
+    }
+  ]
 }]
 
 function getAll(limit) {
@@ -18,20 +36,27 @@ function getAll(limit) {
 }
 
 function getAllTrans(id) {
-  // const id = Number(req.params.id)
-  // const acct = accts.find(acct => acct.id === id)
-  //
-  // return acct.trans
-
-  return limit ? acct.trans.slice(0, limit) : trans
+  const acct = accts.find(acct => acct.id === id)
+  // console.log(acct);
+  return acct.trans
 }
 
 function getOne(id) {
   const acct = accts.find(acct => acct.id === id)
+
   if (!acct) return 'error'
   return acct
 }
 
+function getOneTrans(id, transId) {
+  // console.log(transId);
+  const acct = accts.find(acct => acct.id === id)
+  // console.log(acct);
+  const tran = acct.trans.find(tran => tran.transId === transId)
+  // console.log(tran);
+  if (!acct) return 'error'
+  return tran
+}
 
 function create(body) {
   const errors = []
@@ -118,5 +143,6 @@ module.exports = {
   create,
   update,
   destroy,
-  getAllTrans
+  getAllTrans,
+  getOneTrans
 }

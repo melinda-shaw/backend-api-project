@@ -9,35 +9,34 @@ function getAll(req, res, next) {
 }
 
 function getAllTrans(req, res, next) {
-  const limit = req.query.limit
-  // console.log('limit s/b here', limit);
-  const data = model.getAllTrans(limit)
-
-  // const id = Number(req.params.id)
-  // const acct = accts.find(acct => acct.id === id)
-  // res.json({
-  //   data: acct.trans
-  // })
-
+  const id = parseInt(req.params.id)
+  const data = model.getAllTrans(id)
+  // console.log(data);
   res.json({
     data
   })
 }
 
-///// remove this
-// app.getAllTrans('/accts/:id/trans', (req, res, next) => {
-//   const id = Number(req.params.id)
-//   const acct = accts.find(acct => acct.id === id)
-//
-//   res.json({
-//     data: acct.trans
-//   })
-// })
-///////
-
 function getOne(req, res, next) {
-  const id = req.params.id
+  const id = parseInt(req.params.id)
   const result = model.getOne(id)
+
+
+  if (result === 'error')
+    return next({
+      status: 404,
+      message: `Could not find acct with id of ${id}`
+    })
+
+  res.json({
+    data: result
+  })
+}
+
+function getOneTrans(req, res, next) {
+  const id = parseInt(req.params.id)
+  const transId = parseInt(req.params.transId)
+  const result = model.getOneTrans(id, transId)
 
   if (result === 'error')
     return next({
@@ -101,5 +100,6 @@ module.exports = {
   create,
   update,
   destroy,
-  getAllTrans
+  getAllTrans,
+  getOneTrans
 }

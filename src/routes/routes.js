@@ -9,6 +9,7 @@ router.put('/:id', ctrl.update)
 router.delete('/:id', ctrl.destroy)
 
 router.get('/:id/trans', ctrl.getAllTrans)
-
+router.get('/:id/trans/:transId', ctrl.getOneTrans)
+// router.post('/:id/trans/', ctrl.createTrans)
 
 module.exports = router
