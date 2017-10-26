@@ -49,13 +49,45 @@ function getOne(id) {
 }
 
 function getOneTrans(id, transId) {
-  // console.log(transId);
   const acct = accts.find(acct => acct.id === id)
-  // console.log(acct);
   const tran = acct.trans.find(tran => tran.transId === transId)
-  // console.log(tran);
   if (!acct) return 'error'
   return tran
+}
+
+function createTrans(id, body) {
+  const acct = accts.find(acct => acct.id === id)
+  const trans = []
+  const errors = []
+  const {
+    title,
+    amount,
+    pending
+  } = body
+
+  let response
+  if (!acct) {
+    errors.push(`No acct with id ${id}`)
+    response = {
+      errors
+    }
+  } else if (!title || !amount || !pending) {
+    errors.push(`Field title, amount and pending are required`)
+    response = {
+      errors
+    }
+  } else {
+    const transId = uuid()
+    const tran = {
+      transId,
+      title,
+      amount,
+      pending
+    }
+    acct.trans.push(tran.transId)
+    response = tran
+  }
+  return response
 }
 
 function create(body) {
@@ -89,6 +121,7 @@ function create(body) {
   }
   return response
 }
+
 
 function update(id, body) {
   const errors = []
@@ -144,5 +177,6 @@ module.exports = {
   update,
   destroy,
   getAllTrans,
-  getOneTrans
+  getOneTrans,
+  createTrans
 }

@@ -49,6 +49,22 @@ function getOneTrans(req, res, next) {
   })
 }
 
+function createTrans(req, res, next) {
+  const id = parseInt(req.params.id)
+  // const transId = parseInt(req.params.transId)
+  const result = model.createTrans(id, req.body)
+  if (result.errors) {
+    return next({
+      status: 400,
+      message: `Could not create new trans`,
+      errors: result.errors
+    })
+  }
+  res.status(201).json({
+    data: result
+  })
+}
+
 function create(req, res, next) {
   const result = model.create(req.body)
   if (result.errors) {
@@ -101,5 +117,6 @@ module.exports = {
   update,
   destroy,
   getAllTrans,
-  getOneTrans
+  getOneTrans,
+  createTrans
 }
