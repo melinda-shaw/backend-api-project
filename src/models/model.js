@@ -166,7 +166,7 @@ function createTrans(id, body) {
       amount,
       pending
     }
-    acct.trans.push(tran) ///look here
+    acct.trans.push(tran)
     response = tran
   }
   return response
@@ -213,7 +213,7 @@ function updateTrans(id, transId, body) {
   return response
 }
 
-function destroyTrans(id, tagId) {
+function destroyTrans(id, transId) {
   const errors = []
 
   // let data = fs.readFileSync('./acct.data.json', 'utf-8')
@@ -238,7 +238,8 @@ function destroyTrans(id, tagId) {
     acct.trans.splice(index, 1)
     // data = JSON.stringify(data)
     // fs.writeFileSync('./acct.data.json', data)
-    response = tag
+    response = tran
+
   }
   return response
 }
