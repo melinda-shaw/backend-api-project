@@ -51,7 +51,6 @@ function getOneTrans(req, res, next) {
 
 function createTrans(req, res, next) {
   const id = parseInt(req.params.id)
-  // const transId = parseInt(req.params.transId)
   const result = model.createTrans(id, req.body)
   if (result.errors) {
     return next({
@@ -75,6 +74,23 @@ function create(req, res, next) {
     })
   }
   res.status(201).json({
+    data: result
+  })
+}
+
+function updateTrans(req, res, next) {
+  const id = parseInt(req.params.id)
+  const transId = parseInt(req.params.transId)
+  const result = model.updateTrans(id, transId, req.body)
+
+  if (result.errors) {
+    return next({
+      status: 400,
+      message: `Could not update acct`,
+      errors: result.errors
+    })
+  }
+  res.status(202).json({
     data: result
   })
 }
@@ -118,5 +134,6 @@ module.exports = {
   destroy,
   getAllTrans,
   getOneTrans,
-  createTrans
+  createTrans,
+  updateTrans
 }

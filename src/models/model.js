@@ -35,59 +35,11 @@ function getAll(limit) {
   return limit ? accts.slice(0, limit) : accts
 }
 
-function getAllTrans(id) {
-  const acct = accts.find(acct => acct.id === id)
-  // console.log(acct);
-  return acct.trans
-}
-
 function getOne(id) {
   const acct = accts.find(acct => acct.id === id)
 
   if (!acct) return 'error'
   return acct
-}
-
-function getOneTrans(id, transId) {
-  const acct = accts.find(acct => acct.id === id)
-  const tran = acct.trans.find(tran => tran.transId === transId)
-  if (!acct) return 'error'
-  return tran
-}
-
-function createTrans(id, body) {
-  const acct = accts.find(acct => acct.id === id)
-  const trans = []
-  const errors = []
-  const {
-    title,
-    amount,
-    pending
-  } = body
-
-  let response
-  if (!acct) {
-    errors.push(`No acct with id ${id}`)
-    response = {
-      errors
-    }
-  } else if (!title || !amount || !pending) {
-    errors.push(`Field title, amount and pending are required`)
-    response = {
-      errors
-    }
-  } else {
-    const transId = uuid()
-    const tran = {
-      transId,
-      title,
-      amount,
-      pending
-    }
-    acct.trans.push(tran.transId)
-    response = tran
-  }
-  return response
 }
 
 function create(body) {
@@ -121,7 +73,6 @@ function create(body) {
   }
   return response
 }
-
 
 function update(id, body) {
   const errors = []
@@ -170,6 +121,95 @@ function destroy(id) {
   return response
 }
 
+/////// trans // trans // trans //////
+
+function getAllTrans(id) {
+  const acct = accts.find(acct => acct.id === id)
+  // console.log(acct);
+  return acct.trans
+}
+
+function getOneTrans(id, transId) {
+  const acct = accts.find(acct => acct.id === id)
+  const tran = acct.trans.find(tran => tran.transId === transId)
+  if (!acct) return 'error'
+  return tran
+}
+
+function createTrans(id, body) {
+  const acct = accts.find(acct => acct.id === id)
+  const trans = []
+  const errors = []
+  const {
+    title,
+    amount,
+    pending
+  } = body
+
+  let response
+  if (!acct) {
+    errors.push(`No acct with id ${id}`)
+    response = {
+      errors
+    }
+  } else if (!title || !amount || !pending) {
+    errors.push(`Field title, amount and pending are required`)
+    response = {
+      errors
+    }
+  } else {
+    const transId = uuid()
+    const tran = {
+      transId,
+      title,
+      amount,
+      pending
+    }
+    acct.trans.push(tran.transId)
+    response = tran
+  }
+  return response
+}
+
+function updateTrans(id, transId, body) {
+  const errors = []
+  const acct = accts.find(acct => acct.id === id)
+  const tran = acct.trans.find(tran => tran.transId === transId)
+  const {
+    title,
+    amount,
+    pending
+  } = body
+  let response
+  if (!acct) {
+    errors.push(`No acct with id ${id}`)
+    response = {
+      errors
+    }
+  } else if (!title || !amount || !pending) {
+    errors.push(`Field title, amount and pending are required`)
+    response = {
+      errors
+    }
+  } else {
+    const tran = {
+      transId,
+      title,
+      amount,
+      pending
+    }
+    acct.trans.transId = transId
+    acct.trans.title = title
+    acct.trans.amount = amount
+    acct.trans.pending = pending
+    response = tran
+  }
+  return response
+}
+
+
+
+
 module.exports = {
   getAll,
   getOne,
@@ -178,5 +218,6 @@ module.exports = {
   destroy,
   getAllTrans,
   getOneTrans,
-  createTrans
+  createTrans,
+  updateTrans
 }
