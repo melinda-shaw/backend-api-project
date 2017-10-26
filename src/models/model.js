@@ -138,13 +138,14 @@ function getOneTrans(id, transId) {
 
 function createTrans(id, body) {
   const acct = accts.find(acct => acct.id === id)
-  const trans = []
+  // const trans = []
   const errors = []
   const {
     title,
     amount,
     pending
   } = body
+  // const title = body.title
 
   let response
   if (!acct) {
@@ -165,7 +166,7 @@ function createTrans(id, body) {
       amount,
       pending
     }
-    acct.trans.push(tran.transId)
+    acct.trans.push(tran) ///look here
     response = tran
   }
   return response
@@ -180,6 +181,7 @@ function updateTrans(id, transId, body) {
     amount,
     pending
   } = body
+  console.log(body);
   let response
   if (!acct) {
     errors.push(`No acct with id ${id}`)
@@ -198,16 +200,48 @@ function updateTrans(id, transId, body) {
       amount,
       pending
     }
+    console.log(tran);
+
     acct.trans.transId = transId
     acct.trans.title = title
     acct.trans.amount = amount
     acct.trans.pending = pending
     response = tran
+
+    console.log(response);
   }
   return response
 }
 
+function destroyTrans(id, tagId) {
+  const errors = []
 
+  // let data = fs.readFileSync('./acct.data.json', 'utf-8')
+  // data = JSON.parse(data)
+  let response
+
+  const acct = accts.find(acct => acct.id === id)
+  const tran = acct.trans.find(tran => tran.transId === transId)
+
+  if (!acct) {
+    errors.push(`Could not find acct with id of ${id}`)
+    response = {
+      errors
+    }
+  } else if (!tran) {
+    errors.push(`Could not find trans with id of ${transId}`)
+    response = {
+      errors
+    }
+  } else {
+    const index = acct.trans.indexOf(tran)
+    acct.trans.splice(index, 1)
+    // data = JSON.stringify(data)
+    // fs.writeFileSync('./acct.data.json', data)
+    response = tag
+  }
+  return response
+}
 
 
 module.exports = {
@@ -219,5 +253,6 @@ module.exports = {
   getAllTrans,
   getOneTrans,
   createTrans,
-  updateTrans
+  updateTrans,
+  destroyTrans
 }
