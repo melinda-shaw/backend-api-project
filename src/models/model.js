@@ -1,44 +1,48 @@
 const fs = require('fs')
 const uuid = require('uuid/v4')
 
-const accts = [{
-  id: 101,
-  name: 'Melinda',
-  bankName: 'Lots-o-money Bank',
-  description: 'spending acct',
-  trans: [{
-    transId: 50,
-    title: 'Oldwill',
-    amount: 735.01,
-    pending: true
-  }]
-}, {
-  id: 102,
-  name: 'Brenda',
-  bankName: 'The Bank',
-  description: 'checking',
-  trans: [{
-      transId: 25,
-      title: 'Anthro',
-      amount: 130.59,
-      pending: false
-    },
-    {
-      transId: 32,
-      title: 'testing',
-      amount: 12.00,
-      pending: false
-    }
-  ]
-}]
+// const accts = [{
+//   id: 101,
+//   name: 'Melinda',
+//   bankName: 'Lots-o-money Bank',
+//   description: 'spending acct',
+//   trans: [{
+//     transId: 50,
+//     title: 'Oldwill',
+//     amount: 735.01,
+//     pending: true
+//   }]
+// }, {
+//   id: 102,
+//   name: 'Brenda',
+//   bankName: 'The Bank',
+//   description: 'checking',
+//   trans: [{
+//       transId: 25,
+//       title: 'Anthro',
+//       amount: 130.59,
+//       pending: false
+//     },
+//     {
+//       transId: 32,
+//       title: 'testing',
+//       amount: 12.00,
+//       pending: false
+//     }
+//   ]
+// }]
 
 function getAll(limit) {
-  return limit ? accts.slice(0, limit) : accts
+  let data = fs.readFileSync('./accts.data.json', 'utf-8')
+  data = JSON.parse(data)
+
+  return limit ? data.accts.slice(0, limit) : data.accts
 }
 
 function getOne(id) {
-  const acct = accts.find(acct => acct.id === id)
-
+  let data = fs.readFileSync('./accts.data.json', 'utf-8')
+  data = JSON.parse(data)
+  const acct = data.accts.find(acct => acct.id === id)
   if (!acct) return 'error'
   return acct
 }
@@ -51,10 +55,9 @@ function create(body) {
     description
   } = body
 
-  // const id = Number(req.params.id)
-  // const acct = accts.find(acct => acct.id === id)
-  // const transId = Number(req.params.transId)
-  // const tran = acct.trans.find(tran => tran.id === transId)
+  let data = fs.readFileSync('./accts.data.json', 'utf-8')
+  data = JSON.parse(data)
+
   let response
   if (!name || !bankName || !description) {
     errors.push(`Field name, bankName and description are required`)
@@ -69,8 +72,11 @@ function create(body) {
       bankName,
       description
     }
-    accts.push(acct)
+    data.accts.push(acct)
     response = acct
+    data = JSON.stringify(data)
+    fs.writeFileSync('./accts.data.json', data)
+
   }
   return response
 }
@@ -82,7 +88,10 @@ function update(id, body) {
     bankName,
     description
   } = body
-  const acct = accts.find(acct => acct.id === id)
+  let data = fs.readFileSync('./accts.data.json', 'utf-8')
+  data = JSON.parse(data)
+
+  const acct = data.accts.find(acct => acct.id === id)
   let response
   if (!acct) {
     errors.push(`Could not find acct with id of ${id}`)
@@ -100,13 +109,18 @@ function update(id, body) {
     acct.description = description
 
     response = acct
+    data = JSON.stringify(data)
+    fs.writeFileSync('./accts.data.json', data)
   }
   return response
 }
 
 function destroy(id) {
   const errors = []
-  const acct = accts.find(acct => acct.id === id)
+  let data = fs.readFileSync('./accts.data.json', 'utf-8')
+  data = JSON.parse(data)
+
+  const acct = data.accts.find(acct => acct.id === id)
   let response
 
   if (!acct) {
@@ -115,8 +129,11 @@ function destroy(id) {
       errors
     }
   } else {
-    const index = accts.indexOf(acct)
-    accts.splice(index, 1)
+    const index = data.accts.indexOf(acct)
+    data.accts.splice(index, 1)
+    data = JSON.stringify(data)
+    fs.writeFileSync('./accts.data.json', data)
+
     response = ''
   }
   return response
@@ -125,20 +142,26 @@ function destroy(id) {
 /////// trans // trans // trans //////
 
 function getAllTrans(id) {
-  const acct = accts.find(acct => acct.id === id)
-  // console.log(acct);
+  let data = fs.readFileSync('./accts.data.json', 'utf-8')
+  data = JSON.parse(data)
+  const acct = data.accts.find(acct => acct.id === id)
+
   return acct.trans
 }
 
 function getOneTrans(id, transId) {
-  const acct = accts.find(acct => acct.id === id)
+  let data = fs.readFileSync('./accts.data.json', 'utf-8')
+  data = JSON.parse(data)
+  const acct = data.accts.find(acct => acct.id === id)
   const tran = acct.trans.find(tran => tran.transId === transId)
   if (!acct) return 'error'
   return tran
 }
 
 function createTrans(id, body) {
-  const acct = accts.find(acct => acct.id === id)
+  let data = fs.readFileSync('./accts.data.json', 'utf-8')
+  data = JSON.parse(data)
+  const acct = data.accts.find(acct => acct.id === id)
   // const trans = []
   const errors = []
   const {
@@ -168,21 +191,30 @@ function createTrans(id, body) {
       pending
     }
     acct.trans.push(tran)
+    data.trans.push(tran)
     response = tran
+    data = JSON.stringify(data)
+    fs.writeFileSync('./accts.data.json', data)
   }
   return response
 }
 
 function updateTrans(id, transId, body) {
   const errors = []
-  const acct = accts.find(acct => acct.id === id)
-  const tran = acct.trans.find(tran => tran.transId === transId)
+  let data = fs.readFileSync('./accts.data.json', 'utf-8')
+  data = JSON.parse(data)
+  const acct = data.accts.find(acct => acct.id === id)
+  // const acct = accts.find(acct => acct.id === id)
+  const tran = acct.trans.find(tran => tran.transId === transId) /// not sure if it's data.acct.trans or acct.trans
+  console.log('ONE!!!!', tran);
+  console.log('TWO', acct);
+
   const {
     title,
     amount,
     pending
   } = body
-  console.log(body);
+  console.log('THREE', body);
   let response
   if (!acct) {
     errors.push(`No acct with id ${id}`)
@@ -201,15 +233,18 @@ function updateTrans(id, transId, body) {
       amount,
       pending
     }
-    console.log(tran);
-
+    console.log('FOUR', tran);
     acct.trans.transId = transId
     acct.trans.title = title
     acct.trans.amount = amount
     acct.trans.pending = pending
+    data.trans.push(tran)
+    console.log('FIVE', tran);
     response = tran
 
-    console.log(response);
+    data = JSON.stringify(data)
+    fs.writeFileSync('./accts.data.json', data)
+    console.log('SIX', response);
   }
   return response
 }
@@ -217,11 +252,11 @@ function updateTrans(id, transId, body) {
 function destroyTrans(id, transId) {
   const errors = []
 
-  // let data = fs.readFileSync('./acct.data.json', 'utf-8')
-  // data = JSON.parse(data)
+  let data = fs.readFileSync('./accts.data.json', 'utf-8')
+  data = JSON.parse(data)
   let response
 
-  const acct = accts.find(acct => acct.id === id)
+  const acct = data.accts.find(acct => acct.id === id)
   const tran = acct.trans.find(tran => tran.transId === transId)
 
   if (!acct) {
@@ -237,8 +272,8 @@ function destroyTrans(id, transId) {
   } else {
     const index = acct.trans.indexOf(tran)
     acct.trans.splice(index, 1)
-    // data = JSON.stringify(data)
-    // fs.writeFileSync('./acct.data.json', data)
+    data = JSON.stringify(data)
+    fs.writeFileSync('./accts.data.json', data)
     response = tran
 
   }
