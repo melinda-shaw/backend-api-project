@@ -1,30 +1,31 @@
+const fs = require('fs')
 const uuid = require('uuid/v4')
 
 const accts = [{
   id: 101,
-  name: `Melinda`,
-  bankName: `Lots-o-money Bank`,
-  description: `spending acct`,
+  name: 'Melinda',
+  bankName: 'Lots-o-money Bank',
+  description: 'spending acct',
   trans: [{
     transId: 50,
-    title: `Oldwill`,
+    title: 'Oldwill',
     amount: 735.01,
     pending: true
   }]
 }, {
   id: 102,
-  name: `Brenda`,
-  bankName: `The Bank`,
-  description: `checking`,
+  name: 'Brenda',
+  bankName: 'The Bank',
+  description: 'checking',
   trans: [{
       transId: 25,
-      title: `Anthro`,
+      title: 'Anthro',
       amount: 130.59,
       pending: false
     },
     {
       transId: 32,
-      title: `xxx`,
+      title: 'testing',
       amount: 12.00,
       pending: false
     }
