@@ -88,6 +88,8 @@ function update(id, body) {
   data = JSON.parse(data)
 
   const acct = data.accts.find(acct => acct.id === id)
+
+  console.log('TWO', acct);
   const {
     name,
     bankName,
@@ -96,7 +98,7 @@ function update(id, body) {
   console.log('THREE', name, bankName, description);
 
   let response
-  if (!id) {
+  if (!acct) {
     errors.push(`Could not find acct with id of ${id}`)
     response = {
       errors
