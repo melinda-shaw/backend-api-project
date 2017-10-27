@@ -39,7 +39,8 @@ function create(req, res, next) {
 }
 
 function update(req, res, next) {
-  const result = model.update(req.params.id, req.body)
+  const id = parseInt(req.params.id)
+  const result = model.update(id, req.body)
 
   if (result.errors) {
     return next({

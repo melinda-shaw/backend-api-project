@@ -83,17 +83,20 @@ function create(body) {
 
 function update(id, body) {
   const errors = []
+
+  let data = fs.readFileSync('./accts.data.json', 'utf-8')
+  data = JSON.parse(data)
+
+  const acct = data.accts.find(acct => acct.id === id)
   const {
     name,
     bankName,
     description
   } = body
-  let data = fs.readFileSync('./accts.data.json', 'utf-8')
-  data = JSON.parse(data)
+  console.log('THREE', name, bankName, description);
 
-  const acct = data.accts.find(acct => acct.id === id)
   let response
-  if (!acct) {
+  if (!id) {
     errors.push(`Could not find acct with id of ${id}`)
     response = {
       errors
@@ -107,6 +110,9 @@ function update(id, body) {
     acct.name = name
     acct.bankName = bankName
     acct.description = description
+    console.log('FOUR', name, bankName, description);
+
+    // console.log('FIVE', tran);
 
     response = acct
     data = JSON.stringify(data)
@@ -191,7 +197,7 @@ function createTrans(id, body) {
       pending
     }
     acct.trans.push(tran)
-    data.trans.push(tran)
+    // data.tran.push(tran)
     response = tran
     data = JSON.stringify(data)
     fs.writeFileSync('./accts.data.json', data)
@@ -206,15 +212,15 @@ function updateTrans(id, transId, body) {
   const acct = data.accts.find(acct => acct.id === id)
   // const acct = accts.find(acct => acct.id === id)
   const tran = acct.trans.find(tran => tran.transId === transId) /// not sure if it's data.acct.trans or acct.trans
-  console.log('ONE!!!!', tran);
-  console.log('TWO', acct);
+  // console.log('ONE!!!!', tran);
+  // console.log('TWO', acct);
 
   const {
     title,
     amount,
     pending
   } = body
-  console.log('THREE', body);
+  // console.log('THREE', title, amount, pending);
   let response
   if (!acct) {
     errors.push(`No acct with id ${id}`)
@@ -227,24 +233,16 @@ function updateTrans(id, transId, body) {
       errors
     }
   } else {
-    const tran = {
-      transId,
-      title,
-      amount,
-      pending
-    }
-    console.log('FOUR', tran);
-    acct.trans.transId = transId
-    acct.trans.title = title
-    acct.trans.amount = amount
-    acct.trans.pending = pending
-    data.trans.push(tran)
-    console.log('FIVE', tran);
+    // console.log('FOUR', tran);
+    tran.transId = transId
+    tran.title = title
+    tran.amount = amount
+    tran.pending = pending
+    // console.log('FIVE', tran);
     response = tran
 
     data = JSON.stringify(data)
     fs.writeFileSync('./accts.data.json', data)
-    console.log('SIX', response);
   }
   return response
 }
