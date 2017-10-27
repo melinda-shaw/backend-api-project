@@ -1,37 +1,6 @@
 const fs = require('fs')
 const uuid = require('uuid/v4')
 
-// const accts = [{
-//   id: 101,
-//   name: 'Melinda',
-//   bankName: 'Lots-o-money Bank',
-//   description: 'spending acct',
-//   trans: [{
-//     transId: 50,
-//     title: 'Oldwill',
-//     amount: 735.01,
-//     pending: true
-//   }]
-// }, {
-//   id: 102,
-//   name: 'Brenda',
-//   bankName: 'The Bank',
-//   description: 'checking',
-//   trans: [{
-//       transId: 25,
-//       title: 'Anthro',
-//       amount: 130.59,
-//       pending: false
-//     },
-//     {
-//       transId: 32,
-//       title: 'testing',
-//       amount: 12.00,
-//       pending: false
-//     }
-//   ]
-// }]
-
 function getAll(limit) {
   let data = fs.readFileSync('./accts.data.json', 'utf-8')
   data = JSON.parse(data)
@@ -212,10 +181,8 @@ function updateTrans(id, transId, body) {
   let data = fs.readFileSync('./accts.data.json', 'utf-8')
   data = JSON.parse(data)
   const acct = data.accts.find(acct => acct.id === id)
-  // const acct = accts.find(acct => acct.id === id)
-  const tran = acct.trans.find(tran => tran.transId === transId) /// not sure if it's data.acct.trans or acct.trans
-  // console.log('ONE!!!!', tran);
-  // console.log('TWO', acct);
+
+  const tran = acct.trans.find(tran => tran.transId === transId)
 
   const {
     title,
